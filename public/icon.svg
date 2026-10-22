@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="StudyMate AI">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e0e7ff" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)" />
+  <path d="M112 156h104c28 0 40 16 40 40v188c-16-16-36-26-64-26H112V156z" fill="url(#page)" />
+  <path d="M400 156H296c-28 0-40 16-40 40v188c16-16 36-26 64-26h80V156z" fill="#f8fafc" />
+  <path d="M256 196v188" stroke="#c7d2fe" stroke-width="12" stroke-linecap="round" />
+  <path d="M148 208h64M148 252h64M148 296h48" stroke="#6366f1" stroke-width="14" stroke-linecap="round" opacity="0.75" />
+  <path d="M300 208h64M300 252h64M300 296h48" stroke="#8b5cf6" stroke-width="14" stroke-linecap="round" opacity="0.75" />
+  <path d="M368 92l10 26 26 10-26 10-10 26-10-26-26-10 26-10 10-26z" fill="#fde68a" />
+  <circle cx="136" cy="112" r="10" fill="#a5b4fc" />
+  <circle cx="164" cy="88" r="6" fill="#c4b5fd" />
+</svg>

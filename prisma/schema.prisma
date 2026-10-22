@@ -1,0 +1,131 @@
+// AI Learning Companion — database schema
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String
+  passwordHash   String
+  sessionVersion Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  documents      Document[]
+  flashcards     Flashcard[]
+  quizzes        Quiz[]
+  passwordResets PasswordReset[]
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  fileName  String
+  fileType  String
+  content   String
+  status    String   @default("PROCESSED")
+  createdAt DateTime @default(now())
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chunks     Chunk[]
+  flashcards Flashcard[]
+  quizzes    Quiz[]
+}
+
+model Chunk {
+  id         String @id @default(cuid())
+  documentId String
+  seq        Int
+  content    String
+  embedding  String // JSON array of numbers (vector)
+  tokenCount Int
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
+
+model Flashcard {
+  id             String    @id @default(cuid())
+  userId         String
+  documentId     String?
+  question       String
+  answer         String
+  easeFactor     Float     @default(2.5)
+  interval       Int       @default(0) // days
+  repetitions    Int       @default(0)
+  dueAt          DateTime  @default(now())
+  lastReviewedAt DateTime?
+  createdAt      DateTime  @default(now())
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([userId, dueAt])
+}
+
+model Quiz {
+  id         String   @id @default(cuid())
+  userId     String
+  documentId String?
+  title      String
+  createdAt  DateTime @default(now())
+
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document  Document?      @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  questions QuizQuestion[]
+}
+
+model QuizQuestion {
+  id              String @id @default(cuid())
+  quizId          String
+  question        String
+  options         String // JSON array of answer strings
+  answerIndex     Int
+  userAnswerIndex Int?
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+}
+
+model PasswordReset {
+  id        String    @id @default(cuid())
+  userId    String
+  otpHash   String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model RateLimit {
+  key       String   @id
+  count     Int
+  resetAt   DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model ChatMessage {
+  id         String   @id @default(cuid())
+  userId     String
+  documentId String?
+  channel    String // "study" | "research"
+  role       String // "user" | "assistant"
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@index([userId, channel, createdAt])
+  @@index([documentId])
+}
